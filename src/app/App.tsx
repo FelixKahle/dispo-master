@@ -5,6 +5,8 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./Routes/Root";
 import { DropProvider } from "../components/DropProvider";
 import { ModalProvider } from "../components/ModalProvider";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 /**
  * The main component of the application.
@@ -14,14 +16,16 @@ import { ModalProvider } from "../components/ModalProvider";
 export default function App() {
   return (
     <div className="container">
-      <CssVarsProvider defaultMode="system">
-        <CssBaseline />
-        <ModalProvider>
-          <DropProvider>
-            <RouterProvider router={router} />
-          </DropProvider>
-        </ModalProvider>
-      </CssVarsProvider>
+      <Provider store={store}>
+        <CssVarsProvider defaultMode="system">
+          <CssBaseline />
+          <ModalProvider>
+            <DropProvider>
+              <RouterProvider router={router} />
+            </DropProvider>
+          </ModalProvider>
+        </CssVarsProvider>
+      </Provider>
     </div>
   );
 }

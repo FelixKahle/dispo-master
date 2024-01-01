@@ -304,9 +304,26 @@ pub fn parse_xls_file_tms(file_path: &str) -> Result<polars::prelude::DataFrame,
     Ok(df)
 }
 
+/// Parse two .xls files into a Vec<JobRow>
+///
+/// # Arguments
+/// * `cl_view_path` - The path to the CL View .xls file
+/// * `shipper_site_path` - The path to the Shipper Site .xls file
+/// * `mode` - The DispoMode to use
+///
+/// # Returns
+/// * Result containing a Vec<JobRow> or an error
 pub fn create_job_rows(cl_view_path: &str, shipper_site_path: &str, mode: DispoMode) -> Result<Vec<JobRow>, ParseFilesError> {
     let mut cl_view = parse_xls_file_tms(cl_view_path)?;
     let mut shipper_site = parse_xls_file_tms(shipper_site_path)?;
+
+    // Check if the number of rows in both DataFrames is equal
+    // If not, return an error
+    // TODO: Is this really an error? Or might it be possible that the number of rows is different?
+    if cl_view.height() != shipper_site.height() {
+        return Err(ParseFilesError::MismatchedRowCount((cl_view.height() as i32, shipper_site.height() as i32)).into());
+    }
+
     let column_mapping = ColumnMapping::new(mode);
 
     // Drop the old DataFrames and replace it with a new one containg only the wanted columns

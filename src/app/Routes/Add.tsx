@@ -7,10 +7,42 @@ import MultiStep from "../../components/MultiStep";
 import XLSDropzone from "../../components/XLSDropzone";
 import { useState } from "react";
 import { DispoMode } from "../../tauri-api/types";
-import { parseFiles } from "../../tauri-api/tauriAPI";
+import { parseFiles } from "../../tauri-api/tauriApi";
 import { AlertModal, useModal } from "../../components/ModalProvider";
-
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
+import { useDispatch } from "react-redux";
+import { addJobDataArray } from "../redux/jobDataSlice";
+
+interface ModeSelectorProps {
+  mode: DispoMode | null;
+  onModeChange: (value: DispoMode | null) => void;
+}
+
+const ModeSelector: React.FC<ModeSelectorProps> = ({ mode, onModeChange }) => {
+  const handleChange = (
+    _event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
+    value: any
+  ) => {
+    onModeChange(value);
+  };
+
+  return (
+    <Select value={mode} onChange={handleChange} placeholder="Select a mode" sx={{ width: "200px" }}>
+      <Option value={DispoMode.PICKUP}>Pickup</Option>
+      <Option value={DispoMode.DELIVERY}>Delivery</Option>
+    </Select>
+  );
+};
+
+interface FileUploaderProps {
+  onDelete: () => void;
+  onDrop: (file: string) => void;
+  selectedFilePath: string | null;
+}
+
+const FileUploader: React.FC<FileUploaderProps> = ({ onDelete, onDrop, selectedFilePath }) => {
+  return <XLSDropzone onDelete={onDelete} onDrop={onDrop} selectedFilePath={selectedFilePath} />;
+};
 
 /**
  * The add route.
@@ -26,21 +58,9 @@ export default function Add() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mode, setMode] = useState<DispoMode | null>(null);
   const { openModal, closeModal } = useModal();
+  const dispatch = useDispatch();
 
-  const onModeChange = (
-    _event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
-    value: any
-  ) => {
-    if (value === DispoMode.PICKUP) {
-      setMode(DispoMode.PICKUP);
-      return;
-    } else if (value === DispoMode.DELIVERY) {
-      setMode(DispoMode.DELIVERY);
-      return;
-    }
-
-    setMode(null);
-  };
+  // #region Handlers
 
   const onCLViewFileChange = (file: string) => {
     setCLViewFile(file);
@@ -85,10 +105,7 @@ export default function Add() {
     // This happens on a different thread in the backend.
     parseFiles(clViewFile, shipperSiteFile, mode)
       .then((rows) => {
-        console.log(rows);
-        rows.forEach((row) => {
-          console.log(row.country);
-        });
+        dispatch(addJobDataArray(rows));
       })
       .catch((error) => {
         showErrorMessage(error);
@@ -101,17 +118,6 @@ export default function Add() {
     setCurrentIndex(0);
   };
 
-  const steps = [
-    {
-      name: "Select CL-View",
-      component: <XLSDropzone onDelete={onDeleteCLViewHandler} onDrop={onCLViewFileChange} selectedFilePath={clViewFile} />,
-    },
-    {
-      name: "Select Shipper Site",
-      component: <XLSDropzone onDelete={onDeleteShipperSiteHandler} onDrop={onShipperSiteFileChange} selectedFilePath={shipperSiteFile} />,
-    },
-  ];
-
   const canContinue = (index: number) => {
     switch (index) {
       case 0:
@@ -123,13 +129,23 @@ export default function Add() {
     }
   };
 
+  // #endregion
+
+  const steps = [
+    {
+      name: "Select CL-View",
+      component: <FileUploader onDelete={onDeleteCLViewHandler} onDrop={onCLViewFileChange} selectedFilePath={clViewFile} />,
+    },
+    {
+      name: "Select Shipper Site",
+      component: <FileUploader onDelete={onDeleteShipperSiteHandler} onDrop={onShipperSiteFileChange} selectedFilePath={shipperSiteFile} />,
+    },
+  ];
+
   return (
     <Card variant="outlined" sx={{ minWidth: "100vh", height: "100%" }}>
       <Stack gap={4} sx={{ minWidth: "100vh", height: "100%" }}>
-        <Select value={mode} onChange={onModeChange} placeholder="Select a mode" sx={{ width: "200px" }}>
-          <Option value={DispoMode.PICKUP}>Pickup</Option>
-          <Option value={DispoMode.DELIVERY}>Delivery</Option>
-        </Select>
+        <ModeSelector mode={mode} onModeChange={setMode} />
         <MultiStep
           steps={steps}
           currentIndex={currentIndex}

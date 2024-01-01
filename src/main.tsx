@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./app/App";
-import { closeSplashScreen } from "./tauri-api/tauriAPI";
+import { closeSplashScreen } from "./tauri-api/tauriApi";
 
 // Close the splash screen when the DOM is loaded.
 document.addEventListener("DOMContentLoaded", async () => {
@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // Render the application.
+// Like the main entry point.
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <App />

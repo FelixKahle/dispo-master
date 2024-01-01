@@ -22,6 +22,7 @@ pub enum ParseFilesError {
     CalamineError(calamine::Error),
     PolarsError(polars::error::PolarsError),
     NoHeadersFound,
+    MismatchedRowCount((i32, i32)),
     InvalidSheetCount((i32, i32)),
     AnyValueToNumericParse(AnyValueToNumericParseError),
     AnyValueToNaiveDateTimeParse(AnyValueToNaiveDateTimeParseError),
@@ -77,6 +78,9 @@ impl std::fmt::Display for ParseFilesError {
             ParseFilesError::CalamineError(error) => write!(f, "CalamineError: {}", error),
             ParseFilesError::PolarsError(error) => write!(f, "PolarsError: {}", error),
             ParseFilesError::NoHeadersFound => write!(f, "NoHeadersFound"),
+            ParseFilesError::MismatchedRowCount((first, second)) => {
+                write!(f, "Mismatched row count. Found {} and {}", first, second)
+            }
             ParseFilesError::InvalidSheetCount((expected, actual)) => write!(f, "Expected {} sheets, found {}", expected, actual),
             ParseFilesError::AnyValueToNumericParse(error) => write!(f, "AnyValueToNumericParseError: {}", error),
             ParseFilesError::AnyValueToNaiveDateTimeParse(error) => {
