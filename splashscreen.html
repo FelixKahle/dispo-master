@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+    <script type="module">
+      import { invoke } from "@tauri-apps/api/tauri";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        invoke("show_splashscreen");
+      });
+    </script>
+    <title>Dispo Master</title>
+  </head>
+  <body>
+    <img src="resources/loading.gif" alt="Animated GIF" />
+  </body>
+</html>
