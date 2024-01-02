@@ -2,7 +2,7 @@
 
 import Button from "@mui/joy/Button/Button";
 import Card from "@mui/joy/Card/Card";
-import { getPrinterNames } from "../../tauri-api/tauriApi";
+import { getPrinterNames } from "../../tauri-api/dispoMasterTauriApi";
 
 /**
  * The about page.

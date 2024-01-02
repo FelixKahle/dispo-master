@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./app/App";
-import { closeSplashScreen } from "./tauri-api/tauriApi";
+import { closeSplashScreen } from "./tauri-api/dispoMasterTauriApi";
 
 // Close the splash screen when the DOM is loaded.
 document.addEventListener("DOMContentLoaded", async () => {
