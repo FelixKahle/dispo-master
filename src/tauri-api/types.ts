@@ -32,6 +32,7 @@ export interface ImportedJobRow {
   postalCode: string;
   quantities: number;
   temperatureRanges: TemperatureRange[];
+  tolerance: number;
 }
 
 /**

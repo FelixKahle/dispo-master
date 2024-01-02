@@ -151,7 +151,7 @@ export default function Sidebar(props: SidebarProps): JSX.Element {
         onClick={() => closeSidebar()}
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Typography level="h4">Webfleet Bridge</Typography>
+        <Typography level="h4">Dispo Master</Typography>
         <ColorSchemeToggle sx={{ ml: "auto" }} />
       </Box>
       <Divider />
