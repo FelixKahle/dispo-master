@@ -7,7 +7,7 @@ import MultiStep from "../../components/MultiStep";
 import XLSDropzone from "../../components/XLSDropzone";
 import { useState } from "react";
 import { DispoMode } from "../../tauri-api/types";
-import { parseFiles } from "../../tauri-api/tauriApi";
+import { parseFiles } from "../../tauri-api/dispoMasterTauriApi";
 import { AlertModal, useModal } from "../../components/ModalProvider";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import { useDispatch } from "react-redux";
