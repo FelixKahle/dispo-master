@@ -11,7 +11,7 @@ import { parseFiles } from "../../tauri-api/tauriApi";
 import { AlertModal, useModal } from "../../components/ModalProvider";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import { useDispatch } from "react-redux";
-import { addJobDataArray } from "../redux/jobDataSlice";
+import { addJobDataArray, fromImportedJobRow } from "../redux/jobDataSlice";
 
 interface ModeSelectorProps {
   mode: DispoMode | null;
@@ -103,9 +103,14 @@ export default function Add() {
 
     // Parse the files
     // This happens on a different thread in the backend.
+    // When finished, the data is returned and added to the redux store.
+    // If an error occurs, an error message is shown.
     parseFiles(clViewFile, shipperSiteFile, mode)
       .then((rows) => {
-        dispatch(addJobDataArray(rows));
+        const jobDataArray = rows.map((r) => {
+          return fromImportedJobRow(r);
+        });
+        dispatch(addJobDataArray(jobDataArray));
       })
       .catch((error) => {
         showErrorMessage(error);

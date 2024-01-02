@@ -7,6 +7,7 @@ import { Navigate, Outlet, createHashRouter, useNavigate } from "react-router-do
 import ErrorPage from "./ErrorPage";
 import About from "./About";
 import Add from "./Add";
+import Pickup from "./Pickup";
 
 /**
  * The names of the pages.
@@ -47,7 +48,7 @@ export const router = createHashRouter([
       },
       {
         path: generatePagePath(PageName.Pickup),
-        element: <div>Pickup</div>,
+        element: <Pickup />,
       },
       {
         path: generatePagePath(PageName.Delivery),

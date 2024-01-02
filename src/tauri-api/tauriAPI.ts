@@ -17,6 +17,7 @@ export interface ImportedJobRow {
   lateDate: string;
   postalCode: string;
   quantities: number;
+  tolerance: number;
   temperatureRanges: TemperatureRange[];
 }
 
